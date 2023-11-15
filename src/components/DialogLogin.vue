@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-  v-model="dialogLogin"
-  :persistent="true"
-  :max-width="'400px'"
+    v-model="dialogLogin"
+    :persistent="true"
+    :max-width="'400px'"
   >
   <v-card>
     Teste

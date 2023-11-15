@@ -1,14 +1,14 @@
 <template>
-  <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-    <v-container class="h-100">
+  <v-main class="d-flex align-center justify-center w-100" style="min-height: 300px;">
+    <v-container class="h-100 container">
       <v-row class="h-100">
-        <v-col md="8" class="h-100 sidebar-menu">
+        <v-col sm="12" md="8" class="h-100 sidebar-menu">
           <Banner />
 
           <Canais class="mt-auto" />
         </v-col>
-        <v-col md="4">
-          <div class="h-100 w-100" style="background-color: #e5c8d6;"></div>
+        <v-col sm="0" md="4" class="sidebar-menu">
+          <CanaisRecomendados class="overflow-y-auto"/>
         </v-col>
       </v-row>
     </v-container>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import CanaisRecomendados from '@/components/CanaisRecomendados.vue'
 import Banner from '@/components/Banner.vue'
 import Canais from '@/components/Canais.vue'
 
@@ -23,6 +24,7 @@ export default {
   components: {
     Banner,
     Canais,
+    CanaisRecomendados,
   },
   data: () => ({
   })
@@ -35,5 +37,9 @@ export default {
   font-size: 1.15em;
   display: flex;
   flex-direction: column;
+}
+
+.container{
+  max-width: 100% !important;
 }
 </style>
