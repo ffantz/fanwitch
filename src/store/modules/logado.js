@@ -9,6 +9,7 @@ const state = () => ({
     error: '',
     message: ''
   },
+  dadosUsuario: {},
 })
 
 // getters
@@ -19,6 +20,9 @@ const getters = {
   getLoading: (state) => {
     return state.loading
   },
+  getDadosUsuario: (state) => {
+    return state.dadosUsuario
+  },
 }
 
 // actions
@@ -27,29 +31,49 @@ const actions = {
     let urlApi = rootGetters['global/getUrlApi']
     commit('setLoading', true)
     return new Promise((resolve, reject) => {
-      commit('auth_request')
       axios({ url: urlApi + '/login', data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.access_token
           localStorage.setItem('token', token)
           axios.defaults.headers.common['Authorization'] = "Bearer " + token
           commit('auth_success', { token: token })
-          commit('setLoading', false)
-          // dispatch('getUserAccessData')
-          //   .then(userAccessData => {
-          //     commit('auth_success', { token: token })
-          //     dispatch('updateUserAccessData', userAccessData)
-          //     // router.push({ path: '/' })
-          //     resolve(userAccessData)
-          //   })
+          dispatch('dadosUsuario')
+          resolve()
           return resp
         }).catch(err => {
           commit('auth_error')
-          commit('define_error', { error: true, message: "CPF ou senha inválidos..." })
+          commit('define_error', { error: true, message: err.response.data.message })
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
           localStorage.removeItem('token')
           reject(err)
         })
+        .then(() => {
+          commit('setLoading', false)
+        })
     })
+  },
+  dadosUsuario: ({ commit, dispatch, rootGetters }) => {
+    let urlApi = rootGetters['global/getUrlApi']
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      axios({ url: urlApi + '/dados-usuario', method: 'GET' })
+        .then(resp => {
+          commit('setDadosUsuario', resp.data.data)
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          commit('auth_error')
+          commit('define_error', { error: true, message: err.response.data.message })
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
+  configurarToken: () => {
+    axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.token
   },
   logout({ commit }) {
     return new Promise((resolve) => {
@@ -62,19 +86,22 @@ const actions = {
       resolve()
     })
   },
+  setLogado({ commit }, value) {
+    commit('setLogado', value)
+  },
 }
 
 // mutations
 const mutations = {
   auth_request(state) {
     state.status = 'loading'
-    state.logado = true
   },
   auth_success(state, object) {
     state.status = 'success'
     state.token = object.token
     state.error.error = false
     state.error.message = ""
+    state.logado = true
   },
   auth_error(state) {
     state.status = 'error'
@@ -91,11 +118,14 @@ const mutations = {
     state.error.error = object.error
     state.error.message = object.message
   },
-  setLogin(state, value) {
-    state.login = value
+  setLogado(state, value) {
+    state.logado = value
   },
   setLoading(state, value) {
     state.loading = value
+  },
+  setDadosUsuario(state, value) {
+    state.dadosUsuario = value
   },
 }
 

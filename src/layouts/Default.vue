@@ -1,28 +1,15 @@
 <template>
-  <v-app>
-    <v-layout class="rounded rounded-md">
-      <SideBar />
-
-      <NavBar />
-
-      <MainContent />
-    </v-layout>
-  </v-app>
+  <Home />
 </template>
 
 <script>
-import SideBar from '@/components/SideBar.vue'
-import NavBar from '@/components/NavBar.vue'
-import MainContent from '@/components/Content.vue'
+import Home from '@/views/Home.vue'
 
 export default {
   components: {
-    SideBar,
-    NavBar,
-    MainContent,
+    Home,
   },
   created() {
-    this.$store.dispatch('global/initialize')
   }
 }
 </script>

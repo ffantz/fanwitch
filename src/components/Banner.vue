@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row dense>
       <v-col sm="12" class="mx-auto">
-        <v-card class="background" rounded="xl">
+        <v-card class="d-flex background" rounded="xl">
           <div class="d-flex">
             <div>
               <v-card-title class="text-h3 w-70 text-wrap card-title">

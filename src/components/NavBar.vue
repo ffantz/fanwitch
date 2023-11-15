@@ -17,106 +17,95 @@
       v-model="barraPesquisa"
     ></v-text-field>
 
-      <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
 
-      <!-- Perfil -->
-      <section class="mr-4">
-        <div v-if="logado">
+    <!-- Perfil -->
+    <section class="mr-4">
+      <div v-if="logado">
 
-          <!-- Notificações -->
-          <v-menu
-            bottom
-            offset-y
-            :close-on-content-click="false"
-            :nudge-width="160"
+        <!-- Notificações -->
+        <v-menu
+        bottom
+        offset-y
+        :close-on-content-click="false"
+        :nudge-width="160"
+        >
+        <!-- BTN toogle -->
+        <template v-slot:activator="{ on }">
+          <v-btn
+            v-show="true"
+            icon
+            v-on="on"
           >
-            <!-- BTN toogle -->
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="true"
-                icon
-                v-on="on"
-              >
-                <v-badge
-                  :class="'badge-navbar' + (listNotifications.length > 0 ? 'badge-navbar-10' : '')"
-                  color="red"
-                  :content="listNotifications.length > 0 ? listNotifications.length : '0'"
-                  overlap
-                >
-                  <v-icon medium>mdi-bell
-                  </v-icon>
-                </v-badge>
-              </v-btn>
-            </template>
-            <v-list
-              class="toolbarBtnBox"
-              style="min-width: 400px;"
-              v-if="listNotifications.length > 0"
+            <v-badge
+              :class="'badge-navbar' + (notificacoes && notificacoes.length > 0 ? 'badge-navbar-10' : '')"
+              color="red"
+              :content="notificacoes && notificacoes.length > 0 ? notificacoes.length : '0'"
+              overlap
             >
-              <!-- <NotificationsNavigator /> -->
-            </v-list>
-          </v-menu>
-        </div>
-        <div v-else>
-          <v-btn variant="outlined" @click="dialog = true">Login</v-btn>
-        </div>
-      </section>
+              <v-icon medium>mdi-bell
+              </v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+        <v-list
+          class="toolbarBtnBox"
+          style="min-width: 400px;"
+          v-if="notificacoes && notificacoes.length > 0"
+        >
+          <!-- <NotificationsNavigator /> -->
+        </v-list>
+        </v-menu>
+        <v-btn size="medium" @click="logout" icon="mdi-logout"></v-btn>
+      </div>
+      <div v-else>
+        <v-btn variant="outlined" @click="dialog = true">Login</v-btn>
+      </div>
+    </section>
 
-      <DialogLogin dialog="dialog"></DialogLogin>
+    <DialogLogin v-model:dialog="dialog"/>
+    <Snackbar />
 
   </v-app-bar>
 </template>
 
 <script>
+import DialogLogin from '@/components/DialogLogin.vue'
+import Snackbar from '@/components/Snackbar.vue'
+
 export default {
   components: {
-    DialogLogin: () => import('@/components/DialogLogin.vue'),
+    DialogLogin: DialogLogin,
+    Snackbar: Snackbar,
   },
   data: () => ({
     dialog: false,
-    listNotifications: [
-      {
-        titulo: 'teste notificacao 1',
-        texto: 'essa é uma notificação',
-        lida: 0,
-      },
-      {
-        titulo: 'teste notificacao 2',
-        texto: 'essa é uma notificação',
-        lida: 0,
-      },
-      {
-        titulo: 'teste notificacao 3',
-        texto: 'essa é uma notificação',
-        lida: 0,
-      },
-      {
-        titulo: 'teste notificacao 4',
-        texto: 'essa é uma notificação',
-        lida: 0,
-      },
-      {
-        titulo: 'teste notificacao 5',
-        texto: 'essa é uma notificação',
-        lida: 0,
-      },
-    ]
   }),
   methods: {
     logout(){
       this.$store.dispatch("logado/logout")
-    },
-    login(){
-      this.$store.dispatch("logado/login", {
-        username: 'ffantz',
-        password: '123456'
-      })
     },
     toggleDrawer() {
       this.$store.dispatch("sideBar/toggleDrawer")
     },
   },
   computed: {
+    snackbar: {
+      get() {
+        return this.$store.getters['snackbar/getSnackbar']
+      },
+      set(value) {
+        this.$store.dispatch('snackbar/setSnackbar',value)
+      }
+    },
+    mensagem: {
+      get() {
+        return this.$store.getters['snackbar/getMensagem']
+      },
+      set(value) {
+        this.$store.dispatch('snackbar/setMensagem',value)
+      }
+    },
     drawer() {
       return this.$store.getters["sideBar/getDrawer"]
     },
@@ -125,6 +114,9 @@ export default {
     },
     loading() {
       return this.$store.getters["gloabl/getLoading"]
+    },
+    notificacoes() {
+      return this.$store.getters["logado/getDadosUsuario"].notificacoes
     },
     barraPesquisa: {
       get () {
@@ -155,5 +147,17 @@ export default {
   overflow: hidden;
   overflow-y: hidden;
   height: 61px;
+}
+
+.v-badge__badge {
+  .badge-navbar-10 {
+    text-indent: -5px !important;
+  }
+}
+
+.badge-navbar .v-badge__badge {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
 }
 </style>

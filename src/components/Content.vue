@@ -5,10 +5,10 @@
         <v-col sm="12" md="8" class="h-100 sidebar-menu">
           <Banner />
 
-          <Canais class="mt-auto" />
+          <Canais />
         </v-col>
         <v-col sm="0" md="4" class="sidebar-menu">
-          <CanaisRecomendados class="overflow-y-auto"/>
+          <CanaisRecomendados/>
         </v-col>
       </v-row>
     </v-container>
@@ -27,7 +27,7 @@ export default {
     CanaisRecomendados,
   },
   data: () => ({
-  })
+  }),
 }
 </script>
 

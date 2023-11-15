@@ -23,7 +23,8 @@ export default {
       return new Promise((resolve, reject) => {
         axios({ url: state.urlApi + '/initialize', method: 'get' })
           .then(resp => {
-            commit('setCanais', resp.data.data)
+            let canais = resp.data.data
+            commit('setCanais', canais)
             resolve()
           }).catch(err => {
             console.log(err)

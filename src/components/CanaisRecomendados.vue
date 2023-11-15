@@ -55,19 +55,19 @@ export default {
 
   }),
   methods: {
-    ordenarStatus (b, a) {
-      if ( a.status < b.status ){
-        return -1
+    ordenarStatus (a, b) {
+      if (a.status === b.status) {
+        return b.recomendacoes - a.recomendacoes;
+      } else {
+        return b.status - a.status;
       }
-      if ( a.status > b.status ){
-        return 1
-      }
-        return 0
-      }
+    }
   },
   computed: {
     canais() {
-      return this.$store.getters["global/getCanais"]
+      return this.$store.getters["global/getCanais"].filter((canal) => {
+        return canal.recomendacoes > 0
+      })
     },
   }
 }
