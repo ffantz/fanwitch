@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const state = () => ({
   loading: false,
+  loadingDadosUsuario: false,
   logado: false,
   status: '',
   token: '',
@@ -10,6 +11,7 @@ const state = () => ({
     message: ''
   },
   dadosUsuario: {},
+  notificacoes: [],
 })
 
 // getters
@@ -20,18 +22,23 @@ const getters = {
   getLoading: (state) => {
     return state.loading
   },
+  getLoadingDadosUsuario: (state) => {
+    return state.loadingDadosUsuario
+  },
   getDadosUsuario: (state) => {
     return state.dadosUsuario
+  },
+  getNotificacoes: (state) => {
+    return state.notificacoes
   },
 }
 
 // actions
 const actions = {
-  login: ({ commit, dispatch, rootGetters }, user) => {
-    let urlApi = rootGetters['global/getUrlApi']
+  login: ({ commit, dispatch }, user) => {
     commit('setLoading', true)
     return new Promise((resolve, reject) => {
-      axios({ url: urlApi + '/login', data: user, method: 'POST' })
+      axios({ url: '/login', data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.access_token
           localStorage.setItem('token', token)
@@ -52,13 +59,14 @@ const actions = {
         })
     })
   },
-  dadosUsuario: ({ commit, dispatch, rootGetters }) => {
-    let urlApi = rootGetters['global/getUrlApi']
+  dadosUsuario: ({ commit, dispatch }) => {
     commit('setLoading', true)
+    commit('setLoadingDadosUsuario', true)
     return new Promise((resolve, reject) => {
-      axios({ url: urlApi + '/dados-usuario', method: 'GET' })
+      axios({ url: '/dados-usuario', method: 'GET' })
         .then(resp => {
           commit('setDadosUsuario', resp.data.data)
+          commit('setNotificacoes', resp.data.data.notificacoes)
           resolve(resp.data.data)
           return resp
         }).catch(err => {
@@ -69,11 +77,9 @@ const actions = {
         })
         .then(() => {
           commit('setLoading', false)
+          commit('setLoadingDadosUsuario', false)
         })
     })
-  },
-  configurarToken: () => {
-    axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.token
   },
   logout({ commit }) {
     return new Promise((resolve) => {
@@ -124,8 +130,14 @@ const mutations = {
   setLoading(state, value) {
     state.loading = value
   },
+  setLoadingDadosUsuario(state, value) {
+    state.loadingDadosUsuario = value
+  },
   setDadosUsuario(state, value) {
     state.dadosUsuario = value
+  },
+  setNotificacoes(state, value) {
+    state.notificacoes = value
   },
 }
 

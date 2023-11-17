@@ -11,7 +11,7 @@
 
               <v-card-subtitle class="mt-2">Uma forma simples de indicar seu <b>Streamer favorito</b></v-card-subtitle>
 
-              <v-card-actions class="mt-auto">
+              <v-card-actions class="mt-auto" v-if="!logado" >
                 <v-btn
                   class="ms-2"
                   variant="outlined"
@@ -36,6 +36,21 @@
     </v-row>
   </v-container>
 </template>
+
+<script>
+
+export default {
+  components: {
+  },
+  data: () => ({
+  }),
+  computed: {
+    logado() {
+      return this.$store.getters["logado/getLogado"]
+    },
+  }
+}
+</script>
 
 <style scoped lang="scss">
 .background {

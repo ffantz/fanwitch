@@ -4,13 +4,14 @@
       <v-list-item
         class="text-left fanwitch"
         prepend-avatar="@/assets/logo.png"
+        @click="goTo('/')"
       >
         Fanwitch
       </v-list-item>
 
       <v-divider></v-divider>
 
-      <v-list-item class="mb-4 text-left">
+      <v-list-item class="mb-4 text-left" @click="goTo('/')">
         <template v-slot:prepend>
           <v-icon color="primary">mdi-apps</v-icon>
         </template>
@@ -18,14 +19,14 @@
       </v-list-item>
 
       <div v-if="logado">
-        <v-list-item class="mb-4 text-wrap">
+        <v-list-item class="mb-4 text-wrap" @click="goTo('/minhas-recomendacoes')">
           <template v-slot:prepend>
           <v-icon color="gray">mdi-compass-outline</v-icon>
         </template>
           Minhas recomendações
         </v-list-item>
 
-        <v-list-item class="mb-4 text-left">
+        <v-list-item class="mb-4 text-left" @click="goTo('/mensagens')">
           <template v-slot:prepend>
             <v-icon color="gray">mdi-email</v-icon>
           </template>
@@ -33,14 +34,14 @@
         </v-list-item>
       </div>
 
-      <v-list-item class="mb-4 text-left mt-auto">
+      <v-list-item class="mb-4 text-left mt-auto" @click="goTo('/configuracoes')">
         <template v-slot:prepend>
           <v-icon color="gray">mdi-cog</v-icon>
         </template>
         Configurações
       </v-list-item>
 
-      <v-list-item class="text-left">
+      <v-list-item class="text-left" @click="goTo('/ajuda')">
         <template v-slot:prepend>
           <v-icon color="gray">mdi-help-circle</v-icon>
         </template>
@@ -52,7 +53,13 @@
 
 <script>
 export default {
-  data: () => ({}),
+  data: () => ({
+  }),
+  methods: {
+    goTo(rota) {
+      this.$router.push(rota)
+    }
+  },
   computed: {
     drawer: {
       get () {

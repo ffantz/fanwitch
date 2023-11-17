@@ -14,7 +14,8 @@
       prepend-inner-icon="mdi-magnify"
       single-line
       hide-details
-      v-model="barraPesquisa"
+      v-model="pesquisa"
+      @keyup.enter="pesquisar"
     ></v-text-field>
 
     <v-spacer></v-spacer>
@@ -24,38 +25,9 @@
       <div v-if="logado">
 
         <!-- Notificações -->
-        <v-menu
-        bottom
-        offset-y
-        :close-on-content-click="false"
-        :nudge-width="160"
-        >
-        <!-- BTN toogle -->
-        <template v-slot:activator="{ on }">
-          <v-btn
-            v-show="true"
-            icon
-            v-on="on"
-          >
-            <v-badge
-              :class="'badge-navbar' + (notificacoes && notificacoes.length > 0 ? 'badge-navbar-10' : '')"
-              color="red"
-              :content="notificacoes && notificacoes.length > 0 ? notificacoes.length : '0'"
-              overlap
-            >
-              <v-icon medium>mdi-bell
-              </v-icon>
-            </v-badge>
-          </v-btn>
-        </template>
-        <v-list
-          class="toolbarBtnBox"
-          style="min-width: 400px;"
-          v-if="notificacoes && notificacoes.length > 0"
-        >
-          <!-- <NotificationsNavigator /> -->
-        </v-list>
-        </v-menu>
+        <Notificacoes class="mr-2" />
+
+        <!-- Notificações -->
         <v-btn size="medium" @click="logout" icon="mdi-logout"></v-btn>
       </div>
       <div v-else>
@@ -72,16 +44,23 @@
 <script>
 import DialogLogin from '@/components/DialogLogin.vue'
 import Snackbar from '@/components/Snackbar.vue'
+import Notificacoes from '@/components/Notificacoes.vue'
 
 export default {
   components: {
     DialogLogin: DialogLogin,
     Snackbar: Snackbar,
+    Notificacoes: Notificacoes,
   },
   data: () => ({
     dialog: false,
+    pesquisa: '',
   }),
   methods: {
+    pesquisar(){
+      this.barraPesquisa = this.pesquisa
+      this.$router.push('/pesquisa')
+    },
     logout(){
       this.$store.dispatch("logado/logout")
     },
@@ -115,8 +94,8 @@ export default {
     loading() {
       return this.$store.getters["gloabl/getLoading"]
     },
-    notificacoes() {
-      return this.$store.getters["logado/getDadosUsuario"].notificacoes
+    loadingDadosUsuario() {
+      return this.$store.getters["logado/getLoadingDadosUsuario"]
     },
     barraPesquisa: {
       get () {
@@ -126,23 +105,17 @@ export default {
         this.$store.dispatch('global/setBarraPesquisa', value)
       }
     },
+  },
+  watch: {
+    pesquisa(val) {
+      if (val == '')
+        this.barraPesquisa = this.pesquisa
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
-.toolbarBtnBox {
-  width: 320px;
-  position: relative;
-  padding: 5px;
-  background: #fff !important;
-  border: 1px solid rgba(0, 0, 0, 0.2) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 2px 6px 2px rgba(60, 64, 67, 0.15) !important;
-}
-
 .navbar {
   overflow: hidden;
   overflow-y: hidden;

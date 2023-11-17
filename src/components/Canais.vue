@@ -1,53 +1,21 @@
 <template>
   <v-row dense>
-    <v-col cols="9" class="mx-auto">
+    <v-col cols="9" class="">
       <v-btn-toggle
         v-model="botaoSelecionado"
-        @click="defineListaCanal"
         class="justify-center"
       >
-        <v-btn value="voce" class="ml-4 mr-4" variant="outlined" rounded="xl">Para você</v-btn>
-        <v-btn value="seguindo" class="ml-4 mr-4" variant="outlined" rounded="xl">Seguindo</v-btn>
+        <v-btn v-if="logado" value="voce" class="ml-4 mr-4" variant="outlined" rounded="xl">Para você</v-btn>
+        <v-btn v-if="logado" value="seguindo" class="ml-4 mr-4" variant="outlined" rounded="xl">Seguindo</v-btn>
         <v-btn value="alta" class="ml-4 mr-4" variant="outlined" rounded="xl">Em alta</v-btn>
       </v-btn-toggle>
     </v-col>
   </v-row>
-  <v-row v-if="botaoSelecionado == 'seguindo' && !logado" class="h-100 w-100">
-    <v-card
-      class="d-flex justify-center align-center"
-      min-width="80%"
-    >
-      <v-row>
-        <v-col>
-          <div class="div">Faça login ou cadastre-se para continuar</div>
-          <v-card-actions class="mt-auto div">
-            <v-btn
-              class="ms-2"
-              variant="outlined"
-              size="large"
-              @click="dialog = true"
-            >
-              Login
-            </v-btn>
-            <v-btn
-              class="ms-2"
-              variant="outlined"
-              size="large"
-            >
-              Cadastre-se
-            </v-btn>
-          </v-card-actions>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-row>
 
-  <DialogLogin v-model:dialog="dialog"/>
-
-  <v-row>
+  <v-row class="mt-2">
     <v-col
-        v-for="(canal, index) in listaCanais"
-        :key="index + key"
+        v-for="(canal, index) in canais"
+        :key="index + canais.lenght + index"
         sm="6"
       >
       <v-card
@@ -77,74 +45,39 @@
 </template>
 
 <script>
-import DialogLogin from '@/components/DialogLogin.vue'
 
 export default {
   components: {
-    DialogLogin: DialogLogin,
   },
   data: () => ({
-    botaoSelecionado: null,
+    key: 0,
     dialog: false,
     listaCanais: [],
-    listaCanaisVoce: [],
-    listaCanaisSeguindo: [],
-    listaCanaisAlta: [],
-    key: 0,
   }),
   methods: {
-    initialize(){
-      if (this.canais && this.canais.lenght > 0) {
-        this.listaCanaisVoce = this.canais.slice(0, 8)
-        this.listaCanaisSeguindo = this.logado ? this.canais.sort(this.ordenarStatus).slice(0, 8) : []
-        this.listaCanaisAlta = this.canais.slice(0, 8)
-      }
-    },
-    defineListaCanal(){
-      if ((this.listaCanaisVoce && this.listaCanaisVoce.lenght == 0)
-        || (this.listaCanaisSeguindo && this.listaCanaisSeguindo.lenght == 0)
-        || (this.listaCanaisAlta && this.listaCanaisAlta.lenght == 0)) {
-        this.initialize()
-      }
-
-      if (this.botaoSelecionado == 'seguindo') {
-        this.listaCanais = this.listaCanaisSeguindo
-      } else if (this.botaoSelecionado == 'alta') {
-        this.listaCanais = this.listaCanaisAlta
-      } else {
-        this.listaCanais = this.listaCanaisVoce
-      }
-
-    },
-    ordenarStatus (a, b) {
-      if (a.status === b.status) {
-        return b.recomendacoes - a.recomendacoes;
-      } else {
-        return b.status - a.status;
-      }
-    }
   },
   computed: {
+    botaoSelecionado: {
+      get() {
+        return this.$store.getters['global/getBotaoSelecionado']
+      },
+      set(value) {
+        this.$store.dispatch('global/setBotaoSelecionado',value)
+      }
+    },
     canais() {
-      return this.$store.getters["global/getCanais"]
+      return this.$store.getters["global/getListaCanais"]
     },
     logado() {
       return this.$store.getters["logado/getLogado"]
     },
   },
-  watch: {
-    canais(val) {
-      if (val && val.lenght > 0) {
-        this.initialize()
-      }
-    }
+  mounted() {
   },
   created() {
-    this.defineListaCanal()
   },
-  mounted() {
-    this.initialize()
-  }
+  watch: {
+  },
 }
 </script>
 

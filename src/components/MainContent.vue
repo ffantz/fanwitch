@@ -1,18 +1,15 @@
 <template>
-  <v-main class="d-flex align-center justify-center w-100" style="min-height: 300px;">
-    <v-container class="h-100 container">
-      <v-row class="h-100">
-        <v-col sm="12" md="8" class="h-100 sidebar-menu">
-          <Banner />
+  <v-row class="h-100">
+    <v-col sm="12" md="8" class="h-100 sidebar-menu">
+      <Banner />
+      <!-- <Banner v-if="!logado"/> -->
 
-          <Canais />
-        </v-col>
-        <v-col sm="0" md="4" class="sidebar-menu">
-          <CanaisRecomendados/>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+      <Canais />
+    </v-col>
+    <v-col sm="0" md="4" class="sidebar-menu">
+      <CanaisRecomendados/>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -28,6 +25,11 @@ export default {
   },
   data: () => ({
   }),
+  computed: {
+    logado() {
+      return this.$store.getters["logado/getLogado"]
+    },
+  }
 }
 </script>
 

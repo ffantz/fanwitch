@@ -89,6 +89,7 @@ export default {
       let canais = this.$store.getters["global/getCanais"].filter((canal) => {
         return canal.nome_canal.toLowerCase().includes(this.barraPesquisa.toLowerCase()) || canal.username.toLowerCase().includes(this.barraPesquisa.toLowerCase())
       })
+      console.log("entrou", canais, this.barraPesquisa)
       return canais
     },
     canais() {

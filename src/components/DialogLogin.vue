@@ -24,6 +24,7 @@
             single-line
             hide-details
             v-model="username"
+            @keyup.enter="login"
           ></v-text-field>
           <v-text-field
             class="mt-2"
@@ -35,6 +36,7 @@
             hide-details
             type="password"
             v-model="password"
+            @keyup.enter="login"
           ></v-text-field>
         </v-card-text>
           <v-card-actions class="pl-0 pr-0">
@@ -61,7 +63,6 @@ export default {
       this.$store.dispatch('logado/login', { username: this.username, password: this.password })
     },
     fechar(val) {
-      console.log(val)
       if (val) {
         this.dialogLogin = false
       }
@@ -76,6 +77,8 @@ export default {
         return this.dialog
       },
       set (event) {
+        this.username = ''
+        this.password = ''
         this.$emit('update:dialog', event)
       }
     },

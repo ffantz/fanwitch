@@ -1,5 +1,5 @@
 <template>
-  <p class="mt-2 header">Canais recomendados</p>
+  <p class="mt-2 header">Canais mais recomendados</p>
   <v-list
     class=""
     height="80vh"
@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     canais() {
-      return this.$store.getters["global/getCanais"].filter((canal) => {
+      return this.$store.getters["global/getCanaisRecomendados"].filter((canal) => {
         return canal.recomendacoes > 0
       })
     },
