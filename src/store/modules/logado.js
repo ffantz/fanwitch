@@ -45,6 +45,7 @@ const actions = {
           axios.defaults.headers.common['Authorization'] = "Bearer " + token
           commit('auth_success', { token: token })
           dispatch('dadosUsuario')
+          dispatch('global/initialize', {}, { root: true })
           resolve()
           return resp
         }).catch(err => {

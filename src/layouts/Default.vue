@@ -24,11 +24,18 @@ export default {
     NavBar,
   },
   created() {
-    this.$store.dispatch('global/initialize')
     if (localStorage.token !== undefined) {
       this.$store.dispatch('logado/setLogado', true)
       this.$store.dispatch('logado/dadosUsuario')
     }
+    this.$store.dispatch('global/initialize')
   }
 }
 </script>
+
+<style scoped lang="scss">
+
+.container{
+  max-width: 100% !important;
+}
+</style>

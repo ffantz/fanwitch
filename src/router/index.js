@@ -30,7 +30,11 @@ const routes = [
       {
         path: '/ajuda',
         component: () => import('@/components/Ajuda.vue'),
-      }
+      },
+      {
+        path: '/saiba-mais',
+        component: () => import('@/components/SaibaMais.vue'),
+      },
     ],
   },
   // { // perfil dinamico

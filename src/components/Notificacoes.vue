@@ -22,6 +22,7 @@
         </v-badge>
       </v-btn>
     </template>
+
     <v-list
       v-if="notificacoes && notificacoes.length > 0"
       class="notificacoes pa-0"

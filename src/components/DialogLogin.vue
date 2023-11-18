@@ -1,7 +1,6 @@
 <template>
-  <div>
     <v-dialog
-      v-model="dialogLogin"
+      v-model="dialogLoginInterno"
       :max-width="'400px'"
       :max-height="'600px'"
     >
@@ -12,50 +11,49 @@
           height="50px"
           class="mt-4"
         ></v-img>
-        <!-- <v-card-title>
-          Fanwitch
-        </v-card-title> -->
+
         <v-card-text>
           <v-text-field
-            density="compact"
             variant="outlined"
+            :rules="[regras.obrigatorio]"
             label="Usuario ou email"
             prepend-inner-icon="mdi-account"
-            single-line
-            hide-details
             v-model="username"
+            clearable
             @keyup.enter="login"
           ></v-text-field>
           <v-text-field
+
             class="mt-2"
-            density="compact"
             variant="outlined"
+            :rules="[regras.obrigatorio]"
             label="Senha"
             prepend-inner-icon="mdi-lock"
-            single-line
-            hide-details
             type="password"
+            clearable
             v-model="password"
             @keyup.enter="login"
           ></v-text-field>
         </v-card-text>
-          <v-card-actions class="pl-0 pr-0">
-            <v-btn @click="login" block large color="primary">Entrar</v-btn>
-          </v-card-actions>
-        <!-- <v-btn variant="outlined" @click="cadastrar = true">Cadastre-se</v-btn> -->
+
+        <v-card-actions class="pl-0 pr-0 justify-center align-center">
+          <v-btn @click="login" large color="primary">Entrar</v-btn>
+        </v-card-actions>
       </v-form>
     </v-card>
-    </v-dialog>
-  </div>
+  </v-dialog>
 </template>
 
 <script>
 
 export default {
-  props: [ 'dialog', ],
+  props: [ 'dialogLogin', ],
   data: () => ({
     username: '',
     password: '',
+    regras: {
+      obrigatorio: value => !!value || 'O campo é obrigatório',
+    },
   }),
   methods: {
     login(event) {
@@ -64,7 +62,7 @@ export default {
     },
     fechar(val) {
       if (val) {
-        this.dialogLogin = false
+        this.dialogLoginInterno = false
       }
     }
   },
@@ -72,14 +70,14 @@ export default {
     logado() {
       return this.$store.getters["logado/getLogado"]
     },
-    dialogLogin: {
+    dialogLoginInterno: {
       get () {
-        return this.dialog
+        return this.$store.getters["global/getDialogLogin"]
       },
-      set (event) {
+      set (value) {
         this.username = ''
         this.password = ''
-        this.$emit('update:dialog', event)
+        this.$store.dispatch('global/setDialogLogin', value)
       }
     },
   },

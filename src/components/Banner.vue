@@ -3,8 +3,8 @@
     <v-row dense>
       <v-col sm="12" class="mx-auto">
         <v-card class="d-flex background" rounded="xl">
-          <div class="d-flex">
-            <div>
+          <div :class="'d-flex ' + (isMobile ?'flex-column' : '')">
+            <div class="d-flex flex-column">
               <v-card-title class="text-h3 w-70 text-wrap card-title">
                 Recomende seu Streamer favorito!
               </v-card-title>
@@ -23,6 +23,7 @@
                   class="ms-2"
                   variant="outlined"
                   size="large"
+                  @click="goTo('/saiba-mais')"
                 >
                   Saiba mais
                 </v-btn>
@@ -44,9 +45,17 @@ export default {
   },
   data: () => ({
   }),
+  methods: {
+    goTo(rota) {
+      this.$router.push(rota)
+    }
+  },
   computed: {
     logado() {
       return this.$store.getters["logado/getLogado"]
+    },
+    isMobile() {
+      return window.innerWidth <= 599
     },
   }
 }

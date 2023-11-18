@@ -1,9 +1,9 @@
 <template>
   <p class="mt-2 header">Canais mais recomendados</p>
   <v-list
-    class=""
-    height="80vh"
-    >
+    three-line
+    class="overflow-y-auto"
+  >
     <v-list-item
       v-for="(canal, index) in canais.sort(ordenarStatus)"
       :key="index"

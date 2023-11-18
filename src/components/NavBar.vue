@@ -31,11 +31,11 @@
         <v-btn size="medium" @click="logout" icon="mdi-logout"></v-btn>
       </div>
       <div v-else>
-        <v-btn variant="outlined" @click="dialog = true">Login</v-btn>
+        <v-btn variant="outlined" @click="dialogLogin = true">Login</v-btn>
       </div>
     </section>
 
-    <DialogLogin v-model:dialog="dialog"/>
+    <DialogLogin />
     <Snackbar />
 
   </v-app-bar>
@@ -103,6 +103,14 @@ export default {
       },
       set (value) {
         this.$store.dispatch('global/setBarraPesquisa', value)
+      }
+    },
+    dialogLogin: {
+      get () {
+        return this.$store.getters["global/getDialogLogin"]
+      },
+      set (value) {
+        this.$store.dispatch('global/setDialogLogin', value)
       }
     },
   },
