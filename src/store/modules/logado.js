@@ -82,6 +82,23 @@ const actions = {
         })
     })
   },
+  atualizarInformacoes: ({ commit, dispatch }, data) => {
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      axios({ url: '/atualizar-informacoes', method: 'POST', data: data })
+        .then(resp => {
+          dispatch('dadosUsuario')
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
   logout({ commit }) {
     return new Promise((resolve) => {
       commit('logout')

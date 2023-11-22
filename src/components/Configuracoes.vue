@@ -80,76 +80,76 @@
         <div v-if="logado">
           <v-divider class="mt-6 mb-4"></v-divider>
           <h2 class="mb-2">Configurações de usuário</h2>
-          <v-form class="w-25">
-            <v-text-field
-              variant="outlined"
-              :rules="[regras.obrigatorio]"
-              label="Usuario"
-              prepend-inner-icon="mdi-account"
-              v-model="nome"
-              clearable
-              @keyup.enter="atualizarInformacoes"
-            ></v-text-field>
-
-            <v-menu
-              ref="dateStartModal"
-              v-model="menuDataInicial.on"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ props }">
+          <v-form>
+            <v-row>
+              <v-col cols="12" sm="12" md="6">
                 <v-text-field
                   variant="outlined"
-                  :rules="[regras.obrigatorio]"
-                  label="Data de nascimento"
-                  prepend-inner-icon="mdi-calendar-account"
-                  v-model="data_nascimento"
+                  label="Nome"
+                  prepend-inner-icon="mdi-account"
+                  v-model="nome"
                   clearable
-                  @keyup.enter="atualizarInformacoes"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" sm="12" md="6">
+                <v-menu
+                  ref="dateStartModal"
+                  v-model="menuDataInicial.on"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
                 >
-                  <template v-slot:append-inner-icon>
-                    <v-icon v-bind="props">mdi-calendar-account</v-icon>
+                  <template v-slot:activator="{ props }">
+                    <v-text-field
+                      variant="outlined"
+                      label="Data de nascimento"
+                      prepend-inner-icon="mdi-calendar-account"
+                      v-model="dataNascimento"
+                      clearable
+                    >
+                      <template v-slot:append-inner-icon>
+                        <v-icon v-bind="props">mdi-calendar-account</v-icon>
+                      </template>
+                    </v-text-field>
                   </template>
-                </v-text-field>
-              </template>
 
-              <v-date-picker
-                v-model="dataInicialModel"
-                no-title
-                scrollable
-                name="data_inicial"
-                locale="pt-br"
-                @input="menuDataInicial.on = false"
-                :max="(new Date()).toISOString().substr(0, 10)"
-              ></v-date-picker>
-            </v-menu>
+                  <v-date-picker
+                    v-model="dataInicialModel"
+                    no-title
+                    scrollable
+                    name="data_inicial"
+                    locale="pt-br"
+                    @input="menuDataInicial.on = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
 
-            <v-text-field
-              class="mt-2"
-              variant="outlined"
-              :rules="[regras.obrigatorio]"
-              label="Senha"
-              prepend-inner-icon="mdi-lock"
-              type="password"
-              clearable
-              v-model="password"
-              @keyup.enter="atualizarInformacoes"
-            ></v-text-field>
+              <v-col cols="12" sm="12" md="6">
+                <v-text-field
+                  class="mt-2"
+                  variant="outlined"
+                  label="Senha"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  v-model="password"
+                ></v-text-field>
+              </v-col>
 
-            <v-text-field
-              class="mt-2"
-              variant="outlined"
-              :rules="[regras.obrigatorio]"
-              label="Confirmar senha"
-              prepend-inner-icon="mdi-lock"
-              type="password"
-              clearable
-              v-model="password"
-              @keyup.enter="atualizarInformacoes"
-            ></v-text-field>
+              <v-col cols="12" sm="12" md="6">
+                <v-text-field
+                  class="mt-2"
+                  variant="outlined"
+                  :rules="password !== '' ? [regras.obrigatorio] : []"
+                  label="Confirmar senha"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  v-model="passwordConfirm"
+                ></v-text-field>
+              </v-col>
+            </v-row>
 
             <v-btn color="primary" @click="atualizarInformacoes">Salvar alterações</v-btn>
           </v-form>
@@ -169,11 +169,17 @@
     </v-footer>
   </v-container>
 
+  <Snackbar />
+
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar.vue'
 
 export default {
+  components: {
+    Snackbar: Snackbar,
+  },
   props: [],
   data: () => ({
     conceitos: [
@@ -202,7 +208,7 @@ export default {
 
     // Atualizar informações
     nome: '',
-    data_nascimento: '',
+    dataNascimento: '',
     password: '',
     passwordConfirm: '',
 
@@ -226,7 +232,11 @@ export default {
     },
     atualizarInformacoes(event) {
       event.preventDefault()
-      this.$store.dispatch('logado/atualizar-informacoes', { nome: this.nome, data_nascimento: this.data_nascimento, password: this.password })
+      if (this.password !== '' && this.passwordConfirm !== this.password) {
+        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" }, { root: true })
+        return
+      }
+      this.$store.dispatch('logado/atualizarInformacoes', { nome: this.nome, data_nascimento: this.data_nascimento, password: this.password })
     },
     // filterDate() {
     //   let date = moment(value, originalFormat, true)

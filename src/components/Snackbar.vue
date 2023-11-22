@@ -7,15 +7,6 @@
     timeout="5000"
   >
     <div class="texto">{{ mensagem }}</div>
-    <!-- <template v-slot:actions>
-      <v-btn
-        color="black"
-        variant="text"
-        @click="this.snackbar = false"
-      >
-        Fechar
-      </v-btn>
-    </template> -->
   </v-snackbar>
 </template>
 

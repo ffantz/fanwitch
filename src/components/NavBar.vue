@@ -69,22 +69,6 @@ export default {
     },
   },
   computed: {
-    snackbar: {
-      get() {
-        return this.$store.getters['snackbar/getSnackbar']
-      },
-      set(value) {
-        this.$store.dispatch('snackbar/setSnackbar',value)
-      }
-    },
-    mensagem: {
-      get() {
-        return this.$store.getters['snackbar/getMensagem']
-      },
-      set(value) {
-        this.$store.dispatch('snackbar/setMensagem',value)
-      }
-    },
     drawer() {
       return this.$store.getters["sideBar/getDrawer"]
     },

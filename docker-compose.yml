@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  api:
+    image: api_fanwitch
+    container_name: api-container
+
+  vue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fanwitch
+    container_name: vue-container
+    restart: unless-stopped
+    volumes:
+      - ./fanwitch:/usr/src/app
+    network_mode: host
+    command: [ "npm", "run", "dev", "--host" ]
+    depends_on:
+      - api

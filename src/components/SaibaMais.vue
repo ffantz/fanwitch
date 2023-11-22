@@ -15,17 +15,6 @@
         </v-list>
       </v-col>
     </v-row>
-
-    <!-- Rodapé -->
-    <v-footer class="mt-auto footer">
-      <v-row align="center" justify="center">
-        <v-col>
-          <p class="mb-0">
-            Visite nossa página <a href="/saiba-mais">Saiba Mais</a> para obter informações adicionais sobre o Fanwitch.
-          </p>
-        </v-col>
-      </v-row>
-    </v-footer>
   </v-container>
 
 </template>
