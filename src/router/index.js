@@ -13,44 +13,41 @@ const routes = [
       },
       {
         path: '/pesquisa',
+        name: 'PesquisaCanal',
         component: () => import('@/components/PesquisaCanal.vue'),
       },
       {
         path: '/minhas-recomendacoes',
+        name: 'MinhasRecomendacoes',
         component: () => import('@/components/MinhasRecomendacoes.vue'),
       },
       {
         path: '/mensagens',
+        name: 'Mensagens',
         component: () => import('@/components/Mensagens.vue'),
       },
       {
         path: '/configuracoes',
+        name: 'Configuracoes',
         component: () => import('@/components/Configuracoes.vue'),
       },
       {
         path: '/ajuda',
+        name: 'Ajuda',
         component: () => import('@/components/Ajuda.vue'),
       },
       {
         path: '/saiba-mais',
+        name: 'SaibaMais',
         component: () => import('@/components/SaibaMais.vue'),
+      },
+      {
+        path: '/canal/:username',
+        name: 'Canal',
+        component: () => import('@/components/Canal.vue')
       },
     ],
   },
-  // { // perfil dinamico
-  //   path: '/ajuda',
-  //   component: () => import('@/layouts/Default.vue'),
-  //   children: [
-  //     {
-  //       path: '/',
-  //       name: 'Ajuda',
-  //       // route level code-splitting
-  //       // this generates a separate chunk (Home-[hash].js) for this route
-  //       // which is lazy-loaded when the route is visited.
-  //       component: () => import('@/views/Ajuda.vue'),
-  //     },
-  //   ],
-  // },
 ]
 
 const router = createRouter({

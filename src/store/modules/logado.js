@@ -88,10 +88,34 @@ const actions = {
       axios({ url: '/atualizar-informacoes', method: 'POST', data: data })
         .then(resp => {
           dispatch('dadosUsuario')
+          dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
           resolve(resp.data.data)
           return resp
         }).catch(err => {
           dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
+  cadastrar: ({ commit, dispatch }, data) => {
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      axios({ url: '/cadastrar', method: 'POST', data: data })
+        .then(resp => {
+          dispatch('login', data)
+          dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          console.log(err.response.data.errors)
+          let message = Object.keys(err.response.data.errors).map(element => {
+            return err.response.data.errors[element].join('\n')
+          }).join('\n')
+          console.log(message)
+          dispatch('snackbar/mostrarNotificacao', { mensagem: message }, { root: true })
           reject(err)
         })
         .then(() => {

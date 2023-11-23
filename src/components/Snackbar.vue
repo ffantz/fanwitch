@@ -6,7 +6,7 @@
     elevation="8"
     timeout="5000"
   >
-    <div class="texto">{{ mensagem }}</div>
+    <div class="texto" v-html="mensagem"></div>
   </v-snackbar>
 </template>
 

@@ -48,6 +48,9 @@ export default {
   methods: {
     getRandom() {
       return Math.random()
+    },
+    openPage(canal) {
+      this.$router.push({ path: '/canal/' + canal.username, params: { username: canal.username, canal: canal }})
     }
   },
   computed: {

@@ -8,7 +8,7 @@
       v-for="(canal, index) in canais.sort(ordenarStatus)"
       :key="index"
     >
-    <v-card width="75%">
+    <v-card width="75%" @click="openPage(canal)">
         <v-row>
           <v-col cols="1">
             <v-avatar size="x-large"  :image="'http://apifanwitch.local:81/storage/imagens/perfil/' + canal.avatar"></v-avatar>
@@ -25,7 +25,6 @@
                 </v-col>
                 <v-col cols="3">
                   <v-btn
-                    @click="console.log('clicou')"
                     style="color: #e5c8d6;"
                     rounded
                   >
@@ -61,6 +60,9 @@ export default {
       } else {
         return b.status - a.status;
       }
+    },
+    openPage(canal) {
+      this.$router.push({ path: '/canal/' + canal.username, params: { canal: canal }})
     }
   },
   computed: {

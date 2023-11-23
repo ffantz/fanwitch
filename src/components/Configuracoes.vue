@@ -72,7 +72,7 @@
               @keyup.enter="login"
             ></v-text-field>
 
-            <v-btn color="primary" @click="fazerLogin">Login</v-btn>
+            <v-btn color="primary" @click="login">Login</v-btn>
           </v-form>
         </div>
 
@@ -93,38 +93,18 @@
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
-                <v-menu
-                  ref="dateStartModal"
-                  v-model="menuDataInicial.on"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ props }">
                     <v-text-field
-                      variant="outlined"
-                      label="Data de nascimento"
-                      prepend-inner-icon="mdi-calendar-account"
-                      v-model="dataNascimento"
-                      clearable
-                    >
-                      <template v-slot:append-inner-icon>
-                        <v-icon v-bind="props">mdi-calendar-account</v-icon>
-                      </template>
-                    </v-text-field>
+                  variant="outlined"
+                  label="Data de nascimento"
+                  prepend-inner-icon="mdi-calendar-account"
+                  v-model="dataNascimento"
+                  placeholder="dd/mm/aaaa"
+                  clearable
+                >
+                  <template v-slot:append-inner-icon>
+                    <v-icon v-bind="props">mdi-calendar-account</v-icon>
                   </template>
-
-                  <v-date-picker
-                    v-model="dataInicialModel"
-                    no-title
-                    scrollable
-                    name="data_inicial"
-                    locale="pt-br"
-                    @input="menuDataInicial.on = false"
-                  ></v-date-picker>
-                </v-menu>
+                </v-text-field>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
@@ -225,26 +205,42 @@ export default {
     login(event) {
       event.preventDefault()
       this.$store.dispatch('logado/login', { username: this.usernameLogin, password: this.passwordLogin })
+      this.usernameLogin = ''
+      this.passwordLogin = ''
     },
     cadastrar(event) {
       event.preventDefault()
       this.$store.dispatch('logado/cadastrar', { email: this.emailCadastro, username: this.usernameCadastro,  password: this.passwordCadastro })
+      this.emailCadastro = ''
+      this.usernameCadastro = ''
+      this.passwordCadastro = ''
     },
     atualizarInformacoes(event) {
       event.preventDefault()
-      if (this.password !== '' && this.passwordConfirm !== this.password) {
-        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" }, { root: true })
-        return
+      if (this.nome !== '' || this.dataNascimento !== '' || this.password !== '') {
+        let data = { nome: this.nome }
+
+        if (this.dataNascimento !== '') {
+          this.dataNascimento = this.dataNascimento.split('/').reverse().join('-')
+          data.data_nascimento = this.dataNascimento
+        }
+
+        if (this.password !== '' && this.passwordConfirm !== this.password) {
+          this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" }, { root: true })
+          return
+        }
+
+        data.password = this.password
+
+        this.$store.dispatch('logado/atualizarInformacoes', data)
+        this.nome = ''
+        this.dataNascimento = ''
+        this.password = ''
+        this.passwordConfirm = ''
+      } else {
+        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "Preencha pelo menos um dado para atualizar." }, { root: true })
       }
-      this.$store.dispatch('logado/atualizarInformacoes', { nome: this.nome, data_nascimento: this.data_nascimento, password: this.password })
     },
-    // filterDate() {
-    //   let date = moment(value, originalFormat, true)
-    //   if (date.isValid()) {
-    //     return date.format('DD/MM/YYYY');
-    //   }
-    //   return value
-    // }
   },
   computed: {
     logado() {
@@ -252,9 +248,6 @@ export default {
     },
   },
   watch: {
-    dataInicial: function (newValue) {
-      // this.dataInicialModel = this.$options.filters.dateFormatBr(newValue, 'YYYY-MM-DD')
-    },
   },
 }
 </script>
