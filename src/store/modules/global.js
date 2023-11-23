@@ -50,6 +50,24 @@ export default {
             resolve()
           }).catch(err => {
             console.log(err)
+            if (err.response.data.message == "Unauthenticated.") {
+              localStorage.removeItem('token')
+              delete axios.defaults.headers.common['Authorization']
+              dispatchEvent('logado/logout', {}, { root: true })
+            }
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
+    acaoCanal: ({ commit }, data) => {
+      commit('setLoading', true)
+      return new Promise((resolve, reject) => {
+        axios({ url: '/acao-canal', method: 'POST', data: data })
+          .then(() => {
+            resolve()
+          }).catch(err => {
             reject(err)
           }).then(() => {
             commit('setLoading', false)

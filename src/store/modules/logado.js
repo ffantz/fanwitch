@@ -118,20 +118,23 @@ const actions = {
           dispatch('snackbar/mostrarNotificacao', { mensagem: message }, { root: true })
           reject(err)
         })
-        .then(() => {
+        .finally(() => {
           commit('setLoading', false)
         })
     })
   },
   logout({ commit }) {
     return new Promise((resolve) => {
-      commit('logout')
-      commit('define_error', { error: false, message: "" })
+      axios({ url: '/logout', method: 'GET' })
+        .finally(() => {
+          commit('logout')
+          commit('define_error', { error: false, message: "" })
 
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
-      commit('logout_success')
-      resolve()
+          localStorage.removeItem('token')
+          delete axios.defaults.headers.common['Authorization']
+          commit('logout_success')
+          resolve()
+        })
     })
   },
   setLogado({ commit }, value) {

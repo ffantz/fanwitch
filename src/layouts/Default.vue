@@ -10,16 +10,20 @@
           <router-view />
         </v-container>
       </v-main>
+
+      <Snackbar />
     </v-layout>
   </v-app>
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar.vue'
 import SideBar from '@/components/SideBar.vue'
 import NavBar from '@/components/NavBar.vue'
 
 export default {
   components: {
+    Snackbar,
     SideBar,
     NavBar,
   },

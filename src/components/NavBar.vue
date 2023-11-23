@@ -1,9 +1,6 @@
 <template>
   <v-app-bar class="navbar">
     <v-app-bar-nav-icon @click.stop="toggleDrawer" v-show="!drawer"></v-app-bar-nav-icon>
-
-    <v-toolbar-title> Painel </v-toolbar-title>
-
     <v-spacer></v-spacer>
 
     <v-text-field
@@ -36,20 +33,17 @@
     </section>
 
     <DialogLogin />
-    <Snackbar />
 
   </v-app-bar>
 </template>
 
 <script>
 import DialogLogin from '@/components/DialogLogin.vue'
-import Snackbar from '@/components/Snackbar.vue'
 import Notificacoes from '@/components/Notificacoes.vue'
 
 export default {
   components: {
     DialogLogin: DialogLogin,
-    Snackbar: Snackbar,
     Notificacoes: Notificacoes,
   },
   data: () => ({

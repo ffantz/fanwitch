@@ -16,6 +16,7 @@
                   class="ms-2"
                   variant="outlined"
                   size="large"
+                  @click="goTo('/configuracoes')"
                 >
                   Cadastre-se
                 </v-btn>

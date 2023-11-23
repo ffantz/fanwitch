@@ -7,8 +7,8 @@
         <div v-if="!logado">
           <!-- Configurações de Conta -->
           <v-divider class="mb-4"></v-divider>
-          <h2 class="mb-2">Configurações de Conta</h2>
-          <v-form class="w-25">
+          <h2 class="mb-2">Criar nova Conta</h2>
+          <v-form class="">
             <v-text-field
               variant="outlined"
               :rules="[regras.obrigatorio]"
@@ -49,7 +49,7 @@
         <div v-if="!logado">
           <v-divider class="mt-6 mb-4"></v-divider>
           <h2 class="mb-2">Caso já possua cadastro, faça login</h2>
-          <v-form class="w-25">
+          <v-form class="">
             <v-text-field
               variant="outlined"
               :rules="[regras.obrigatorio]"
@@ -148,17 +148,12 @@
       </v-row>
     </v-footer>
   </v-container>
-
-  <Snackbar />
-
 </template>
 
 <script>
-import Snackbar from '@/components/Snackbar.vue'
 
 export default {
   components: {
-    Snackbar: Snackbar,
   },
   props: [],
   data: () => ({
@@ -226,7 +221,7 @@ export default {
         }
 
         if (this.password !== '' && this.passwordConfirm !== this.password) {
-          this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" }, { root: true })
+          this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" })
           return
         }
 
@@ -238,7 +233,7 @@ export default {
         this.password = ''
         this.passwordConfirm = ''
       } else {
-        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "Preencha pelo menos um dado para atualizar." }, { root: true })
+        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "Preencha pelo menos um dado para atualizar." })
       }
     },
   },
