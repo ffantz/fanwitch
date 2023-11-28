@@ -53,6 +53,8 @@ export default {
   methods: {
     pesquisar(){
       this.barraPesquisa = this.pesquisa
+      this.$store.dispatch("global/pesquisarCanal", { nome: this.pesquisa })
+      this.$store.dispatch("global/pesquisarUsuario", { nome: this.pesquisa })
       this.$router.push('/pesquisa')
     },
     logout(){

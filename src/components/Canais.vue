@@ -15,7 +15,7 @@
           <v-row>
             <v-col cols="4">
               <v-avatar size="x-large"
-                :image="'http://apifanwitch.local:81/storage/imagens/perfil/' + canal.avatar"></v-avatar>
+                :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
             </v-col>
             <v-col cols="8">
               <b>{{ canal.nome_canal }}</b>
@@ -41,6 +41,7 @@ export default {
   components: {
   },
   data: () => ({
+    baseUrl: import.meta.env.VITE_BASE_URL,
     key: 0,
     dialog: false,
     listaCanais: [],

@@ -46,6 +46,11 @@ const routes = [
         name: 'Canal',
         component: () => import('@/components/Canal.vue')
       },
+      {
+        path: '/usuario/:username',
+        name: 'Usuario',
+        component: () => import('@/components/Usuario.vue')
+      },
     ],
   },
 ]

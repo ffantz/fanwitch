@@ -4,14 +4,14 @@
       <v-row>
         <v-col cols="12">
           <v-img
-            :src="'http://apifanwitch.local:81/storage/imagens/capa/' + canal.foto_capa"
+            :src="baseUrl + '/storage/imagens/capa/' + canal.foto_capa"
             class="align-end"
             height="300"
           >
           </v-img>
         </v-col>
         <v-col cols="12">
-          <v-avatar size="x-large"  :image="'http://apifanwitch.local:81/storage/imagens/perfil/' + canal.avatar"></v-avatar>
+          <v-avatar size="x-large"  :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
           <span class="ml-2">{{ canal.username }}</span>
         </v-col>
         <v-col sm="6" cols="12" class="h-100">
@@ -50,6 +50,7 @@ export default {
   components: {
   },
   data: () => ({
+    baseUrl: import.meta.env.VITE_BASE_URL,
     canal: ''
   }),
   methods: {

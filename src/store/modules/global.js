@@ -13,6 +13,8 @@ export default {
     listaCanaisVoce: [],
     listaCanaisSeguindo: [],
     listaCanaisAlta: [],
+    usuariosPesquisa: [],
+    canaisPesquisa: [],
   },
   mutations: {
     setDialogCadastro: (state, value) => state.dialogCadastro = value,
@@ -25,6 +27,8 @@ export default {
     setListaCanaisVoce: (state, value) => state.listaCanaisVoce = value,
     setListaCanaisSeguindo: (state, value) => state.listaCanaisSeguindo = value,
     setListaCanaisAlta: (state, value) => state.listaCanaisAlta = value,
+    setUsuariosPesquisa: (state, value) => state.usuariosPesquisa = value,
+    setCanaisPesquisa: (state, value) => state.canaisPesquisa = value,
   },
   actions: {
     setDialogCadastro: (context, value) => { context.commit('setDialogCadastro', value) },
@@ -74,6 +78,36 @@ export default {
           })
       })
     },
+    pesquisarCanal: ({ commit }, data) => {
+      commit('setLoading', true)
+      return new Promise((resolve, reject) => {
+        axios({ url: '/pesquisar-canal', method: 'POST', data: data })
+          .then(resp => {
+            let canais = resp.data.data
+            commit('setCanaisPesquisa', canais)
+            resolve()
+          }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
+    pesquisarUsuario: ({ commit }, data) => {
+      commit('setLoading', true)
+      return new Promise((resolve, reject) => {
+        axios({ url: '/pesquisar-usuario', method: 'POST', data: data })
+          .then(resp => {
+            let usuarios = resp.data.data
+            commit('setUsuariosPesquisa', usuarios)
+            resolve()
+          }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
   },
   getters: {
     getDialogCadastro: state => state.dialogCadastro,
@@ -86,5 +120,7 @@ export default {
     getListaCanaisVoce: state => state.listaCanaisVoce,
     getListaCanaisSeguindo: state => state.listaCanaisSeguindo,
     getListaCanaisAlta: state => state.listaCanaisAlta,
+    getUsuariosPesquisa: state => state.usuariosPesquisa,
+    getCanaisPesquisa: state => state.canaisPesquisa,
   }
 }

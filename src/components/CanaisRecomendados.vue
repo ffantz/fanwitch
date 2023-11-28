@@ -11,7 +11,7 @@
     <v-card width="75%" @click="openPage(canal)">
         <v-row>
           <v-col cols="1">
-            <v-avatar size="x-large"  :image="'http://apifanwitch.local:81/storage/imagens/perfil/' + canal.avatar"></v-avatar>
+            <v-avatar size="x-large"  :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
           </v-col>
           <v-col cols="11">
             <v-card-actions>
@@ -51,7 +51,7 @@
 
 export default {
   data: () => ({
-
+    baseUrl: import.meta.env.VITE_BASE_URL,
   }),
   methods: {
     ordenarStatus (a, b) {
