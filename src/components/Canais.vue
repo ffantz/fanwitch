@@ -1,6 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0 mt-4">
-    <v-row class="mt-2">
+    <v-row class="d-flex align-stretch mt-2">
       <v-col
         xs="12"
         sm="12"
@@ -9,9 +9,9 @@
         xl="6"
         cols="12"
         v-for="(canal, index) in canais" :key="tipo + index"
-        class="pa-0 mt-2 align-self-stretch"
+        class="pa-0 mt-2"
       >
-        <v-card class="mx-auto pa-2" max-width="90%">
+        <v-card class="mx-auto pa-2 h-100" max-width="90%">
           <v-row>
             <v-col cols="4">
               <v-avatar size="x-large"

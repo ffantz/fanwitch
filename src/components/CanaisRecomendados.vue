@@ -8,7 +8,7 @@
       v-for="(canal, index) in canais.sort(ordenarStatus)"
       :key="index"
     >
-    <v-card width="75%" @click="openPage(canal)">
+    <v-card @click="openPage(canal)">
         <v-row>
           <v-col cols="1">
             <v-avatar size="x-large"  :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
