@@ -21,7 +21,7 @@
       <v-row>
         <v-col>
           <p>
-            Visite nossa página <a href="/saiba-mais">Saiba Mais</a> para obter informações adicionais sobre o Fanwitch.
+            Visite nossa página <a class="link" @click="goTo('/saiba-mais')">Saiba Mais</a> para obter informações adicionais sobre o Fanwitch.
           </p>
         </v-col>
       </v-row>
@@ -51,6 +51,11 @@ export default {
     ]
   }),
   computed: {
+  },
+  methods: {
+    goTo(rota) {
+      this.$router.push(rota)
+    },
   }
 }
 </script>
@@ -61,4 +66,14 @@ export default {
   min-height: 40px;
   max-height: 50px !important;
 }
+
+.link{
+  text-decoration: underline;
+  color: blue;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
 </style>

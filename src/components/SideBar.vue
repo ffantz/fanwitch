@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer class="h-100" mobile-break-point="1360" v-model="drawer">
+  <v-navigation-drawer :class="isMobile ? 'sidebar' : 'h-100'" mobile-break-point="1360" v-model="drawer">
     <v-list class="h-100 sidebar-menu">
       <v-list-item
         class="text-left fanwitch"
@@ -61,6 +61,9 @@ export default {
     }
   },
   computed: {
+    isMobile() {
+      return window.innerWidth <= 599
+    },
     drawer: {
       get () {
         return this.$store.state.sideBar.drawer
@@ -82,6 +85,10 @@ export default {
   text-align: justify;
   color: #e5c8d6;
   font-size: 1.1em;
+}
+
+.sidebar{
+  height: 100vh !important;
 }
 
 .sidebar-menu {

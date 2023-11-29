@@ -15,6 +15,8 @@ export default {
     listaCanaisAlta: [],
     usuariosPesquisa: [],
     canaisPesquisa: [],
+    canal: [],
+    usuario: [],
   },
   mutations: {
     setDialogCadastro: (state, value) => state.dialogCadastro = value,
@@ -29,6 +31,8 @@ export default {
     setListaCanaisAlta: (state, value) => state.listaCanaisAlta = value,
     setUsuariosPesquisa: (state, value) => state.usuariosPesquisa = value,
     setCanaisPesquisa: (state, value) => state.canaisPesquisa = value,
+    setCanal: (state, value) => state.canal = value,
+    setUsuario: (state, value) => state.usuario = value,
   },
   actions: {
     setDialogCadastro: (context, value) => { context.commit('setDialogCadastro', value) },
@@ -53,7 +57,6 @@ export default {
             commit('setBotaoSelecionado', 'alta')
             resolve()
           }).catch(err => {
-            console.log(err)
             if (err.response.data.message == "Unauthenticated.") {
               localStorage.removeItem('token')
               delete axios.defaults.headers.common['Authorization']
@@ -78,13 +81,12 @@ export default {
           })
       })
     },
-    pesquisarCanal: ({ commit }, data) => {
+    acaoUsuario: ({ commit }, data) => {
       commit('setLoading', true)
       return new Promise((resolve, reject) => {
-        axios({ url: '/pesquisar-canal', method: 'POST', data: data })
-          .then(resp => {
-            let canais = resp.data.data
-            commit('setCanaisPesquisa', canais)
+        let url = data.acao == 'AMIZADE' ? 'solicitacao-amizade' : 'remover-amizade'
+        axios({ url: url, method: 'POST', data: { id_usuario: data.id_usuario } })
+          .then(() => {
             resolve()
           }).catch(err => {
             reject(err)
@@ -93,15 +95,75 @@ export default {
           })
       })
     },
-    pesquisarUsuario: ({ commit }, data) => {
+    pesquisarCanal: ({ commit, rootGetters, state }, data) => {
+      commit('setLoading', true)
+      let url = rootGetters['logado/getLogado'] ? '/pesquisa-canal' : '/pesquisar-canal'
+      return new Promise((resolve, reject) => {
+        axios({ url: url, method: 'POST', data: { nome: (data.nome ? data.nome : state.barraPesquisa) } })
+          .then(resp => {
+            let response = resp.data.data
+            if (data.perfil) {
+              commit('setCanal', response.length > 0 ? response[0] : false)
+            } else {
+              commit('setCanaisPesquisa', response)
+            }
+            resolve()
+          }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
+    pesquisarUsuario: ({ commit, rootGetters, state }, data) => {
+      commit('setLoading', true)
+      let url = rootGetters['logado/getLogado'] ? '/pesquisa-usuario' : '/pesquisar-usuario'
+      return new Promise((resolve, reject) => {
+        axios({ url: url, method: 'POST', data: { nome: (data.nome ? data.nome : state.barraPesquisa) } })
+          .then(resp => {
+            let response = resp.data.data
+            if (data.perfil) {
+              commit('setUsuario', response.length > 0 ? response[0] : false)
+            } else {
+              commit('setUsuariosPesquisa', response)
+            }
+            resolve()
+          }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
+    dadosCanal: ({ commit }, data) => {
       commit('setLoading', true)
       return new Promise((resolve, reject) => {
-        axios({ url: '/pesquisar-usuario', method: 'POST', data: data })
+        axios({ url: '/dados-canal', method: 'POST', data: data })
           .then(resp => {
             let usuarios = resp.data.data
             commit('setUsuariosPesquisa', usuarios)
             resolve()
           }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
+    dadosUsuario: ({ commit }, data) => {
+      commit('setLoading', true)
+      return new Promise((resolve, reject) => {
+        axios({ url: '/dados-usuario', method: 'POST', data: data })
+          .then(resp => {
+            let usuarios = resp.data.data
+            commit('setUsuariosPesquisa', usuarios)
+            resolve()
+          }).catch(err => {
+            if (err.response.data.message == "Unauthenticated.") {
+              localStorage.removeItem('token')
+              delete axios.defaults.headers.common['Authorization']
+              dispatchEvent('logado/logout', {}, { root: true })
+            }
             reject(err)
           }).then(() => {
             commit('setLoading', false)
@@ -122,5 +184,7 @@ export default {
     getListaCanaisAlta: state => state.listaCanaisAlta,
     getUsuariosPesquisa: state => state.usuariosPesquisa,
     getCanaisPesquisa: state => state.canaisPesquisa,
+    getCanal: state => state.canal,
+    getUsuario: state => state.usuario,
   }
 }

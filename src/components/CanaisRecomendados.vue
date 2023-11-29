@@ -62,7 +62,7 @@ export default {
       }
     },
     openPage(canal) {
-      this.$router.push({ path: '/canal/' + canal.username, params: { canal: canal }})
+      this.$router.push({ path: '/canal/' + canal.username })
     }
   },
   computed: {

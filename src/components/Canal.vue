@@ -1,17 +1,17 @@
 <template>
-  <v-card class="w-100 h-100">
-    <v-container>
+  <v-card :loading="canal === null" class="w-100 h-100">
+    <v-container v-if="canal !== null && canal !== false">
       <v-row>
         <v-col cols="12">
           <v-img
-            :src="baseUrl + '/storage/imagens/capa/' + canal.foto_capa"
+            :src="baseUrl + '/storage/imagens/capa/' + (canal.foto_capa ? canal.foto_capa : 'no_photo.png')"
             class="align-end"
             height="300"
           >
           </v-img>
         </v-col>
         <v-col cols="12">
-          <v-avatar size="x-large"  :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
+          <v-avatar size="x-large"  :image="baseUrl + '/storage/imagens/perfil/' + (canal.avatar ? canal.avatar : 'no_photo.png')"></v-avatar>
           <span class="ml-2">{{ canal.username }}</span>
         </v-col>
         <v-col sm="6" cols="12" class="h-100">
@@ -19,6 +19,9 @@
             <v-card-title>
               Bem vindo(a) ao {{ canal.nome_canal }}!
             </v-card-title>
+            <v-card-subtitle>
+              Sobre:
+            </v-card-subtitle>
             <v-card-item>
               {{ canal.descricao }}
             </v-card-item>
@@ -41,6 +44,9 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-container v-else>
+      Canal não encontrado
+    </v-container>
   </v-card>
 </template>
 
@@ -51,9 +57,11 @@ export default {
   },
   data: () => ({
     baseUrl: import.meta.env.VITE_BASE_URL,
-    canal: ''
   }),
   methods: {
+    initialize() {
+      this.$store.dispatch('global/pesquisarCanal', { nome: this.$route.params.username, perfil: true })
+    },
     acaoBotao(acao){
       if (!this.logado) {
         this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "Faça login para executar essa ação" })
@@ -92,21 +100,17 @@ export default {
     }
   },
   computed: {
-    canais() {
-      return this.$store.getters["global/getCanaisRecomendados"].filter((canal) => {
-        return canal.recomendacoes > 0
-      })
+    canal() {
+      return this.$store.getters["global/getCanal"]
     },
     logado() {
       return this.$store.getters["logado/getLogado"]
     },
   },
   created(){
-    this.canais.forEach(element => {
-      if (element.username == this.$route.params.username) {
-        this.canal = element
-      }
-    })
+    this.initialize()
+  },
+  watch: {
   }
 }
 </script>

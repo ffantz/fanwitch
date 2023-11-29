@@ -1,62 +1,62 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '',
-    component: () => import('@/layouts/Default.vue'),
+    path: '/',
+    component: () => import(/* webpackChunkName: "Default" */ '@/layouts/Default.vue'),
     children: [
       {
         path: '',
         name: 'MainContent',
-        component: () => import('@/components/MainContent.vue'),
+        component: () => import(/* webpackChunkName: "MainContent" */ '@/components/MainContent.vue'),
       },
       {
         path: '/pesquisa',
-        name: 'PesquisaCanal',
-        component: () => import('@/components/PesquisaCanal.vue'),
+        name: 'Pesquisa',
+        component: () => import(/* webpackChunkName: "Pesquisa" */ '@/components/Pesquisa.vue'),
       },
       {
         path: '/minhas-recomendacoes',
         name: 'MinhasRecomendacoes',
-        component: () => import('@/components/MinhasRecomendacoes.vue'),
+        component: () => import(/* webpackChunkName: "MinhasRecomendacoes" */ '@/components/MinhasRecomendacoes.vue'),
       },
       {
         path: '/mensagens',
         name: 'Mensagens',
-        component: () => import('@/components/Mensagens.vue'),
+        component: () => import(/* webpackChunkName: "Mensagens" */ '@/components/Mensagens.vue'),
       },
       {
         path: '/configuracoes',
         name: 'Configuracoes',
-        component: () => import('@/components/Configuracoes.vue'),
+        component: () => import(/* webpackChunkName: "Configuracoes" */ '@/components/Configuracoes.vue'),
       },
       {
         path: '/ajuda',
         name: 'Ajuda',
-        component: () => import('@/components/Ajuda.vue'),
+        component: () => import(/* webpackChunkName: "Ajuda" */ '@/components/Ajuda.vue'),
       },
       {
         path: '/saiba-mais',
         name: 'SaibaMais',
-        component: () => import('@/components/SaibaMais.vue'),
+        component: () => import(/* webpackChunkName: "SaibaMais" */ '@/components/SaibaMais.vue'),
       },
       {
         path: '/canal/:username',
         name: 'Canal',
-        component: () => import('@/components/Canal.vue')
+        component: () => import(/* webpackChunkName: "Canal" */ '@/components/Canal.vue')
       },
       {
         path: '/usuario/:username',
         name: 'Usuario',
-        component: () => import('@/components/Usuario.vue')
+        component: () => import(/* webpackChunkName: "Usuario" */ '@/components/Usuario.vue')
       },
     ],
   },
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 

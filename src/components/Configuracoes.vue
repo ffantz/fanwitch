@@ -1,5 +1,5 @@
 <template>
-  <v-container class="ma-0 h-100 d-flex flex-column">
+  <v-container class="ma-0 container d-flex flex-column">
     <v-row>
       <v-col>
         <h1 class="mb-4">Configurações - Fanwitch</h1>
@@ -87,24 +87,55 @@
                   variant="outlined"
                   label="Nome"
                   prepend-inner-icon="mdi-account"
-                  v-model="nome"
+                  v-model="dadosUsuario.nome"
                   clearable
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
-                    <v-text-field
+                <v-text-field
                   variant="outlined"
                   label="Data de nascimento"
                   prepend-inner-icon="mdi-calendar-account"
-                  v-model="dataNascimento"
+                  v-model="dadosUsuario.data_nascimento"
                   placeholder="dd/mm/aaaa"
                   clearable
                 >
-                  <template v-slot:append-inner-icon>
-                    <v-icon v-bind="props">mdi-calendar-account</v-icon>
-                  </template>
                 </v-text-field>
+              </v-col>
+
+              <v-col cols="12" sm="12" md="6">
+                <v-textarea
+                  variant="outlined"
+                  label="Descrição"
+                  prepend-inner-icon="mdi-image-text"
+                  v-model="dadosUsuario.descricao"
+                  clearable
+                >
+                </v-textarea>
+              </v-col>
+
+              <v-col cols="12" sm="12" md="6">
+                <v-file-input
+                  label="Avatar"
+                  variant="outlined"
+                  prepend-inner-icon="mdi-file-account-outline"
+                  prepend-icon=""
+                  show-size
+                  accept="image/png, image/jpeg, image/bmp"
+                  v-model="dadosUsuario.imagemAvatar"
+                  @input="definirNovoAvatar"
+                  @click:clear="limparCampo"
+                  clearable
+                >
+                </v-file-input>
+                <v-avatar v-if="dadosUsuario.imagemAvatar == null" size="x-large" :image="baseUrl + '/storage/imagens/perfil/'
+                  + (dadosUsuario.avatar
+                  ? dadosUsuario.avatar
+                  : 'no_photo.png')"
+                ></v-avatar>
+                <v-avatar v-else size="x-large" :image="url"
+                ></v-avatar>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
@@ -134,6 +165,96 @@
             <v-btn color="primary" @click="atualizarInformacoes">Salvar alterações</v-btn>
           </v-form>
         </div>
+
+        <div v-if="logado">
+          <v-divider class="mt-6 mb-4"></v-divider>
+          <h2 class="mb-2">Configurações de canal</h2>
+          <div>
+            <v-btn color="primary" v-if="Object.keys(canal).length == 0 && !canalHabilitado" @click="canalHabilitado = !canalHabilitado">Habilitar canal</v-btn>
+            <v-form v-if="Object.keys(canal).length > 0 || canalHabilitado">
+              <v-row>
+                <v-col cols="12" sm="12" md="6">
+                  <v-text-field
+                    variant="outlined"
+                    label="Nome canal"
+                    prepend-inner-icon="mdi-account"
+                    v-model="canal.nome_canal"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12" sm="12" md="6">
+                  <v-text-field
+                    variant="outlined"
+                    label="Username canal"
+                    prepend-inner-icon="mdi-account"
+                    v-model="canal.username"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12" sm="12" md="6">
+                  <v-file-input
+                    label="Avatar canal"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-file-account-outline"
+                    prepend-icon=""
+                    show-size
+                    accept="image/png, image/jpeg, image/bmp"
+                    v-model="canal.imagemAvatar"
+                    @input="definirNovoAvatarCanal"
+                    @click:clear="limparCampoCanal"
+                    clearable
+                  >
+                  </v-file-input>
+                  <v-avatar v-if="canal.imagemAvatar == null" size="x-large" :image="baseUrl + '/storage/imagens/perfil/'
+                    + (canal.avatar
+                    ? canal.avatar
+                    : 'no_photo.png')"
+                  ></v-avatar>
+                  <v-avatar v-else size="x-large" :image="urlCanal"
+                  ></v-avatar>
+                </v-col>
+
+                <v-col cols="12" sm="12" md="6">
+                  <v-file-input
+                    label="Capa canal"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-file-account-outline"
+                    prepend-icon=""
+                    show-size
+                    accept="image/png, image/jpeg, image/bmp"
+                    v-model="canal.imagemCapa"
+                    @input="definirNovaCapa"
+                    @click:clear="limparCampoCapa"
+                    clearable
+                  >
+                  </v-file-input>
+                  <v-avatar v-if="canal.imagemCapa == null" size="x-large" :image="baseUrl + '/storage/imagens/capa/'
+                    + (canal.foto_capa
+                    ? canal.foto_capa
+                    : 'no_photo.png')"
+                  ></v-avatar>
+                  <v-avatar v-else size="x-large" :image="urlCapa"
+                  ></v-avatar>
+                </v-col>
+
+                <v-col cols="12" sm="12">
+                  <v-textarea
+                    variant="outlined"
+                    label="Descrição"
+                    prepend-inner-icon="mdi-image-text"
+                    v-model="canal.descricao"
+                    clearable
+                  >
+                  </v-textarea>
+                </v-col>
+              </v-row>
+
+              <v-btn color="primary" @click="atualizarCanal">{{ canal.uuid == undefined ? 'Criar canal' : 'Atualizar dados do canal' }}</v-btn>
+            </v-form>
+          </div>
+        </div>
       </v-col>
     </v-row>
 
@@ -142,7 +263,7 @@
       <v-row>
         <v-col>
           <p>
-            Visite nossa página <a href="/saiba-mais">Saiba Mais</a> para obter informações adicionais sobre o Fanwitch.
+            Visite nossa página <a class="link" @click="goTo('/saiba-mais')">Saiba Mais</a> para obter informações adicionais sobre o Fanwitch.
           </p>
         </v-col>
       </v-row>
@@ -157,6 +278,7 @@ export default {
   },
   props: [],
   data: () => ({
+    baseUrl: import.meta.env.VITE_BASE_URL,
     conceitos: [
       {
         titulo: 'Componentização',
@@ -182,8 +304,6 @@ export default {
     passwordLogin: '',
 
     // Atualizar informações
-    nome: '',
-    dataNascimento: '',
     password: '',
     passwordConfirm: '',
 
@@ -191,12 +311,21 @@ export default {
     dataInicialModel: '',
     menuDataInicial: { value: null, on: false },
 
+    canalHabilitado: false,
+
+    url: null,
+    urlCanal: null,
+    urlCapa: null,
+
     // Validações
     regras: {
       obrigatorio: value => !!value || 'O campo é obrigatório',
     },
   }),
   methods: {
+    goTo(rota) {
+      this.$router.push(rota)
+    },
     login(event) {
       event.preventDefault()
       this.$store.dispatch('logado/login', { username: this.usernameLogin, password: this.passwordLogin })
@@ -212,34 +341,107 @@ export default {
     },
     atualizarInformacoes(event) {
       event.preventDefault()
-      if (this.nome !== '' || this.dataNascimento !== '' || this.password !== '') {
-        let data = { nome: this.nome }
+      console.log(event, this.dadosUsuario.imagemAvatar)
+      const formData = new FormData()
 
-        if (this.dataNascimento !== '') {
-          this.dataNascimento = this.dataNascimento.split('/').reverse().join('-')
-          data.data_nascimento = this.dataNascimento
-        }
+      if (this.dadosUsuario.data_nascimento !== null) {
+        let data_nascimento = this.dadosUsuario.data_nascimento.split('/').reverse().join('-')
+        this.dadosUsuario.data_nascimento = data_nascimento
+        formData.append('data_nascimento', this.dadosUsuario.data_nascimento)
+      }
 
-        if (this.password !== '' && this.passwordConfirm !== this.password) {
+      if (this.dadosUsuario.nome !== null) {
+        formData.append('nome', this.dadosUsuario.nome)
+      }
+
+      if (this.dadosUsuario.descricao !== null) {
+        formData.append('descricao', this.dadosUsuario.descricao)
+      }
+
+      if (this.password !== ''){
+        if (this.passwordConfirm !== this.password) {
           this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "As senhas não conferem" })
           return
+        } else {
+          this.dadosUsuario.password = this.password
+          formData.append('password', this.dadosUsuario.password)
         }
-
-        data.password = this.password
-
-        this.$store.dispatch('logado/atualizarInformacoes', data)
-        this.nome = ''
-        this.dataNascimento = ''
-        this.password = ''
-        this.passwordConfirm = ''
-      } else {
-        this.$store.dispatch('snackbar/mostrarNotificacao', { mensagem: "Preencha pelo menos um dado para atualizar." })
       }
+
+      if (this.dadosUsuario.imagemAvatar !== null && this.url !== null && this.dadosUsuario.imagemAvatar.length > 0) {
+        formData.append('imagem_avatar', this.dadosUsuario.imagemAvatar[0])
+      }
+
+      this.$store.dispatch('logado/atualizarInformacoes', formData)
+      this.password = ''
+      this.passwordConfirm = ''
+    },
+    atualizarCanal(event){
+      event.preventDefault()
+      const formData = new FormData()
+      formData.append('nome_canal', this.canal.nome_canal)
+      formData.append('username', this.canal.username)
+      formData.append('descricao', this.canal.descricao)
+
+      if (this.canal.imagemAvatar !== null && this.urlCanal !== null && this.canal.imagemAvatar.length > 0) {
+        formData.append('imagem_avatar', this.canal.imagemAvatar[0])
+      }
+
+      if (this.canal.imagemCapa !== null && this.urlCapa !== null && this.canal.imagemCapa.length > 0) {
+        formData.append('imagem_capa', this.canal.imagemCapa[0])
+      }
+
+      if (this.canal.uuid !== undefined) {
+        formData.append('uuid', this.canal.uuid)
+        formData.append('_method', 'PUT')
+      }
+
+      this.$store.dispatch('logado/atualizarCanal', formData)
+    },
+    definirNovoAvatar(event) {
+      let file = event.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
+    definirNovoAvatarCanal(event) {
+      let file = event.target.files[0];
+      this.urlCanal = URL.createObjectURL(file);
+    },
+    definirNovaCapa(event) {
+      let file = event.target.files[0];
+      this.urlCapa = URL.createObjectURL(file);
+    },
+    limparCampo(){
+      this.url = null
+      this.dadosUsuario.imagemAvatar = null
+    },
+    limparCampoCanal(){
+      this.urlCanal = null
+      this.canal.imagemAvatar = null
+    },
+    limparCampoCapa(){
+      this.urlCapa = null
+      this.canal.imagemCapa = null
     },
   },
   computed: {
     logado() {
       return this.$store.getters["logado/getLogado"]
+    },
+    dadosUsuario: {
+      get() {
+        return this.$store.getters["logado/getDadosUsuario"]
+      },
+      set(value) {
+        this.$store.dispatch('logado/setDadosUsuario', value)
+      }
+    },
+    canal: {
+      get() {
+        return this.$store.getters["logado/getCanal"]
+      },
+      set(value) {
+        this.$store.dispatch('logado/setCanal', value)
+      }
     },
   },
   watch: {
@@ -253,4 +455,19 @@ export default {
   min-height: 40px;
   max-height: 50px !important;
 }
+
+.container{
+  height: 90vh;
+  overflow-y: auto;
+}
+
+.link{
+  text-decoration: underline;
+  color: blue;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
 </style>

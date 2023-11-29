@@ -35,8 +35,10 @@
           <v-list-item-title>{{ notificacao.titulo }} </v-list-item-title>
           <v-list-item-subtitle class="text-wrap">{{ notificacao.texto }} </v-list-item-subtitle>
           <v-list-item-action class="mt-2 mb-2" v-if="notificacao.lida == '0'">
-            <v-spacer></v-spacer>
-            <v-btn size="small" color="primary" @click="lerNotificacao(notificacao)">Não Lida</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn v-if="notificacao.sigla == 'NTCM'" size="small" color="primary" @click="lerNotificacao(notificacao)">Não Lida</v-btn>
+          <v-btn v-if="notificacao.sigla == 'SLAZ'" size="small" color="primary" @click="aceitarAmizade(notificacao, '1')">Aceitar</v-btn>
+          <v-btn v-if="notificacao.sigla == 'SLAZ'" size="small" color="primary" @click="aceitarAmizade(notificacao, '0')">Recusar</v-btn>
           </v-list-item-action>
         <v-divider v-if="index < notificacoes.length - 1" class="mt-2"></v-divider>
       </v-list-item>
@@ -54,6 +56,17 @@ export default {
   methods: {
     lerNotificacao(item) {
       this.$http({ url: '/notificacoes/' + item.uuid, data: { lida: '1' }, method: 'PUT' })
+        .then(resp => {
+          if(resp.data.data) {
+            item.lida = '1'
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    aceitarAmizade(item, status) {
+      this.$http({ url: '/notificacoes/' + item.uuid, data: { lida: '1', acao: status }, method: 'PUT' })
         .then(resp => {
           if(resp.data.data) {
             item.lida = '1'

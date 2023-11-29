@@ -1,5 +1,5 @@
 <template>
-  <v-container class="ma-0 pa-0">
+  <v-container class="ma-0 pa-0 mt-4">
     <v-row class="mt-2">
       <v-col
         xs="12"
@@ -51,7 +51,7 @@ export default {
       return Math.random()
     },
     openPage(canal) {
-      this.$router.push({ path: '/canal/' + canal.username, params: { username: canal.username, canal: canal }})
+      this.$router.push({ path: '/canal/' + canal.username })
     }
   },
   computed: {

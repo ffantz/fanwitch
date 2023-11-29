@@ -12,6 +12,7 @@ const state = () => ({
   },
   dadosUsuario: {},
   notificacoes: [],
+  canal: {},
 })
 
 // getters
@@ -30,6 +31,9 @@ const getters = {
   },
   getNotificacoes: (state) => {
     return state.notificacoes
+  },
+  getCanal: (state) => {
+    return state.canal
   },
 }
 
@@ -66,8 +70,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios({ url: '/dados-usuario', method: 'GET' })
         .then(resp => {
-          commit('setDadosUsuario', resp.data.data)
-          commit('setNotificacoes', resp.data.data.notificacoes)
+          let dadosUsuario = resp.data.data
+          commit('setDadosUsuario', dadosUsuario)
+          commit('setNotificacoes', dadosUsuario.notificacoes)
+          commit('setCanal', dadosUsuario.canal != null ? dadosUsuario.canal : {})
           resolve(resp.data.data)
           return resp
         }).catch(err => {
@@ -86,6 +92,25 @@ const actions = {
     commit('setLoading', true)
     return new Promise((resolve, reject) => {
       axios({ url: '/atualizar-informacoes', method: 'POST', data: data })
+        .then(resp => {
+          dispatch('dadosUsuario')
+          dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
+  atualizarCanal: ({ commit, dispatch }, data) => {
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      let url = data.get("uuid") ? data.get("uuid") : ''
+      axios({ url: 'canal/' + url, method: 'POST', data: data })
         .then(resp => {
           dispatch('dadosUsuario')
           dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
@@ -183,6 +208,9 @@ const mutations = {
   },
   setNotificacoes(state, value) {
     state.notificacoes = value
+  },
+  setCanal(state, value) {
+    state.canal = value
   },
 }
 
