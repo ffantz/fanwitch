@@ -134,8 +134,8 @@
                   ? dadosUsuario.avatar
                   : 'no_photo.png')"
                 ></v-avatar>
-                <v-avatar v-else size="x-large" :image="url"
-                ></v-avatar>
+                <v-avatar v-else size="x-large" :image="url"></v-avatar>
+                <v-btn v-if="dadosUsuario.avatar !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('usuario', dadosUsuario, 'avatar')">Remover foto</v-btn>
               </v-col>
 
               <v-col cols="12" sm="12" md="6">
@@ -189,6 +189,7 @@
                     label="Username canal"
                     prepend-inner-icon="mdi-account"
                     v-model="canal.username"
+                    :disabled="canal.uuid !== null"
                     clearable
                   ></v-text-field>
                 </v-col>
@@ -212,8 +213,8 @@
                     ? canal.avatar
                     : 'no_photo.png')"
                   ></v-avatar>
-                  <v-avatar v-else size="x-large" :image="urlCanal"
-                  ></v-avatar>
+                  <v-avatar v-else size="x-large" :image="urlCanal"></v-avatar>
+                  <v-btn v-if="canal.avatar !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'avatar')">Remover foto</v-btn>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="6">
@@ -235,8 +236,8 @@
                     ? canal.foto_capa
                     : 'no_photo.png')"
                   ></v-avatar>
-                  <v-avatar v-else size="x-large" :image="urlCapa"
-                  ></v-avatar>
+                  <v-avatar v-else size="x-large" :image="urlCapa"></v-avatar>
+                  <v-btn v-if="canal.foto_capa !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'foto_capa')">Remover foto</v-btn>
                 </v-col>
 
                 <v-col cols="12" sm="12">
@@ -252,6 +253,7 @@
               </v-row>
 
               <v-btn color="primary" @click="atualizarCanal">{{ canal.uuid == undefined ? 'Criar canal' : 'Atualizar dados do canal' }}</v-btn>
+              <v-btn color="primary" class="ml-4" v-if="canal.uuid !== undefined" @click="deletarCanal(canal)">Deletar Canal</v-btn>
             </v-form>
           </div>
         </div>
@@ -269,6 +271,28 @@
       </v-row>
     </v-footer>
   </v-container>
+
+  <v-dialog
+    v-model="modalDeletar"
+    max-width="400px"
+    max-height="600px"
+    persistent
+  >
+    <v-card>
+      <div class="pa-2">
+        <v-card-title class="text-wrap">
+          Tem certeza que deseja deletar o canal?
+        </v-card-title>
+        <v-card-text>
+          Essa ação não poderá ser desfeita.
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn @click="deletarCanal(canal, true)" color="error">Deletar</v-btn>
+          <v-btn @click="modalDeletar = !modalDeletar" color="primary">Cancelar</v-btn>
+        </v-card-actions>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -316,6 +340,8 @@ export default {
     url: null,
     urlCanal: null,
     urlCapa: null,
+
+    modalDeletar: false,
 
     // Validações
     regras: {
@@ -421,6 +447,16 @@ export default {
     limparCampoCapa(){
       this.urlCapa = null
       this.canal.imagemCapa = null
+    },
+    removerFoto(tipo, canal, campo) {
+      this.$store.dispatch('logado/deletarFoto', { tipo: tipo, uuid: canal.uuid, campo: campo })
+    },
+    deletarCanal(canal, confirmacao = false) {
+      if (confirmacao) {
+        this.$store.dispatch('logado/deletarCanal', canal)
+      }
+
+      this.modalDeletar = !this.modalDeletar
     },
   },
   computed: {

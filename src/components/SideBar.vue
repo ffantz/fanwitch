@@ -26,12 +26,12 @@
           Minhas recomendações
         </v-list-item>
 
-        <v-list-item class="mb-4 text-left" @click="goTo('/mensagens')">
+        <!-- <v-list-item class="mb-4 text-left" @click="goTo('/mensagens')">
           <template v-slot:prepend>
             <v-icon color="gray">mdi-email</v-icon>
           </template>
           Mensagem
-        </v-list-item>
+        </v-list-item> -->
       </div>
 
       <v-list-item class="mb-4 text-left mt-auto" @click="goTo('/configuracoes')">

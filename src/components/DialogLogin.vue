@@ -1,9 +1,9 @@
 <template>
-    <v-dialog
-      v-model="dialogLoginInterno"
-      :max-width="'400px'"
-      :max-height="'600px'"
-    >
+  <v-dialog
+    v-model="dialogLoginInterno"
+    :max-width="'400px'"
+    :max-height="'600px'"
+  >
     <v-card>
       <v-form @submit="login">
         <v-img

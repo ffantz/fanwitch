@@ -125,6 +125,43 @@ const actions = {
         })
     })
   },
+  deletarFoto: ({ commit, dispatch }, data) => {
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      let url = data.tipo
+      axios({ url: url + '/deletar-foto', method: 'POST', data: data })
+        .then(resp => {
+          dispatch('dadosUsuario')
+          dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
+  deletarCanal: ({ commit, dispatch }, data) => {
+    commit('setLoading', true)
+    return new Promise((resolve, reject) => {
+      axios({ url: 'canal/' + data.uuid, method: 'DELETE', data: data })
+        .then(resp => {
+          dispatch('dadosUsuario')
+          dispatch('snackbar/mostrarNotificacao', { mensagem: resp.data.message }, { root: true })
+          resolve(resp.data.data)
+          return resp
+        }).catch(err => {
+          dispatch('snackbar/mostrarNotificacao', { mensagem: err.response.data.message }, { root: true })
+          reject(err)
+        })
+        .then(() => {
+          commit('setLoading', false)
+        })
+    })
+  },
   cadastrar: ({ commit, dispatch }, data) => {
     commit('setLoading', true)
     return new Promise((resolve, reject) => {
