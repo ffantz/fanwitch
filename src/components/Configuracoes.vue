@@ -189,7 +189,7 @@
                     label="Username canal"
                     prepend-inner-icon="mdi-account"
                     v-model="canal.username"
-                    :disabled="canal.uuid !== null"
+                    :disabled="canal.uuid !== undefined"
                     clearable
                   ></v-text-field>
                 </v-col>
