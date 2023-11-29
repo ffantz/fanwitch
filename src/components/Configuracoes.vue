@@ -214,7 +214,7 @@
                     : 'no_photo.png')"
                   ></v-avatar>
                   <v-avatar v-else size="x-large" :image="urlCanal"></v-avatar>
-                  <v-btn v-if="canal.avatar !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'avatar')">Remover foto</v-btn>
+                  <v-btn v-if="canal.avatar !== undefined && canal.avatar !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'avatar')">Remover foto</v-btn>
                 </v-col>
 
                 <v-col cols="12" sm="12" md="6">
@@ -237,7 +237,7 @@
                     : 'no_photo.png')"
                   ></v-avatar>
                   <v-avatar v-else size="x-large" :image="urlCapa"></v-avatar>
-                  <v-btn v-if="canal.foto_capa !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'foto_capa')">Remover foto</v-btn>
+                  <v-btn v-if="canal.foto_capa !== undefined && canal.foto_capa !== null" class="ml-4" color="primary" variant="outlined" @click="removerFoto('canal', canal, 'foto_capa')">Remover foto</v-btn>
                 </v-col>
 
                 <v-col cols="12" sm="12">
