@@ -19,7 +19,7 @@
                 :image="baseUrl + '/storage/imagens/perfil/' + canal.avatar"></v-avatar>
             </v-col>
             <v-col cols="8">
-              <b>{{ canal.nome_canal }}</b> {{ canal.qtdSeguidores }}
+              <b>{{ canal.nome_canal }}</b>
               <v-divider class="mt-auto"></v-divider>
               <v-card-actions class="div">
                 <v-spacer></v-spacer>
