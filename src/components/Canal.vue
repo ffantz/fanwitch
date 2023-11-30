@@ -89,6 +89,8 @@ export default {
     defineAcao(acao) {
       if (acao == 'PARAR_SEGUIR' || acao == 'SEGUIR') {
         this.canal.seguido = !this.canal.seguido
+        this.canal.recomendado ? this.canal.recomendado = !this.canal.recomendado : false
+        this.canal.inscrito ? this.canal.inscrito = !this.canal.inscrito : false
         if (acao == 'SEGUIR') {
           this.canal.seguidores++
         } else {

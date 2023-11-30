@@ -17,6 +17,7 @@ export default {
     canaisPesquisa: [],
     canal: [],
     usuario: [],
+    minhasRecomendacoes: [],
   },
   mutations: {
     setDialogCadastro: (state, value) => state.dialogCadastro = value,
@@ -33,6 +34,7 @@ export default {
     setCanaisPesquisa: (state, value) => state.canaisPesquisa = value,
     setCanal: (state, value) => state.canal = value,
     setUsuario: (state, value) => state.usuario = value,
+    setMinhasRecomendacoes: (state, value) => state.minhasRecomendacoes = value,
   },
   actions: {
     setDialogCadastro: (context, value) => { context.commit('setDialogCadastro', value) },
@@ -170,6 +172,20 @@ export default {
           })
       })
     },
+    buscaCanaisRecomendados: ({ commit }) => {
+      commit('setLoading', true)
+      return new Promise((resolve, reject) => {
+        axios({ url: '/busca-canais-recomendados', method: 'GET' })
+          .then(resp => {
+            commit('setMinhasRecomendacoes', resp.data.data)
+            resolve()
+          }).catch(err => {
+            reject(err)
+          }).then(() => {
+            commit('setLoading', false)
+          })
+      })
+    },
   },
   getters: {
     getDialogCadastro: state => state.dialogCadastro,
@@ -186,5 +202,6 @@ export default {
     getCanaisPesquisa: state => state.canaisPesquisa,
     getCanal: state => state.canal,
     getUsuario: state => state.usuario,
+    getMinhasRecomendacoes: state => state.minhasRecomendacoes,
   }
 }
